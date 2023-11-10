@@ -40,32 +40,22 @@ class MainActivity : ComponentActivity() {
         minutes = findViewById(R.id.minutes)
         btn = findViewById(R.id.btn)
 
-        val textWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                if (message.text.toString() != "" &&
-                    phoneNumber.text.toString() != "" &&
-                    minutes.text.toString() != "") {
-                    btn.isEnabled = true
-                }
-                else {
-                    btn.isEnabled = false
-                }
-            }
-        }
-        message.addTextChangedListener(textWatcher)
-        phoneNumber.addTextChangedListener(textWatcher)
-        minutes.addTextChangedListener(textWatcher)
-
         btn.setOnClickListener {
             if (btn.text == "Start") {
-                thereYetAlarm()
-                btn.text = "Stop"
+                if (message.text.toString() == "" ||
+                    phoneNumber.text.toString() == "" ||
+                    minutes.text.toString() == "") {
+                    Toast.makeText(this, "All fields haven't been filled yet", Toast.LENGTH_SHORT).show()
+
+                }
+                else if (minutes.text.toString() == "0"){
+                    Toast.makeText(this, "Minutes can't be less than 1", Toast.LENGTH_SHORT).show()
+
+                }
+                else {
+                    thereYetAlarm()
+                    btn.text = "Stop"
+                }
             }
             else if (btn.text == "Stop"){
                 alarmManager.cancel(pendingIntent)
