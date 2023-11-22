@@ -1,23 +1,17 @@
 package edu.uw.ischool.saeid135.awty
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.content.Intent
-import android.app.Application
-import android.content.Context
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
-import android.widget.Button
-import android.widget.EditText
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 import android.content.IntentFilter
+import android.os.Bundle
+import android.telephony.SmsManager
+import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 
 
 const val ALARM_ACTION = "edu.uw.ischool.saeid135.ALARM"
@@ -71,6 +65,9 @@ class MainActivity : ComponentActivity() {
         if (receiver == null) {
             receiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context?, intent: Intent?) {
+                    val smsManager: SmsManager = SmsManager.getDefault()
+                    smsManager.sendTextMessage("+1" + phoneNumber.text.toString(), null,
+                        message.text.toString(), null, null)
                     Toast.makeText(activityThis, "${phoneNumber.text} ${message.text}", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -86,7 +83,7 @@ class MainActivity : ComponentActivity() {
         alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
             System.currentTimeMillis(),
-            minutes.text.toString().toLong() * 60000,
+            minutes.text.toString().toLong() * 6,
             pendingIntent)
     }
 }
